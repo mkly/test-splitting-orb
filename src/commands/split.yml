@@ -11,9 +11,6 @@ parameters:
   organization:
     description: Your CircleCI organization
     type: string
-  project:
-    description: This CircleCI project
-    type: string
 steps:
   - run: 
       name: Running tests
@@ -26,8 +23,8 @@ steps:
         echo $ALL_TEST_FILES
         TEST_FILES=$(curl -L -G -v "http://localhost:6789" \
           --data-urlencode "circle-token=${CIRCLE_TOKEN}" \
-          --data-urlencode "organization=<<parameters.organization>>" \
-          --data-urlencode "project=<<parameters.project>>" \
+          --data-urlencode "organization=${CIRCLE_PROJECT_USERNAME}" \
+          --data-urlencode "project=${CIRCLE_PROJECT_REPONAME}" \
           --data-urlencode "vcs=gh" \
           --data-urlencode "test-files=${ALL_TEST_FILES}" \
           --data-urlencode "node-index=${CIRCLE_NODE_INDEX}" \
