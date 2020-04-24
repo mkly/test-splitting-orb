@@ -16,12 +16,6 @@ parameters:
     type: string
 steps:
   - run: 
-      name: Preparing to store test results data
-      command: mkdir -p ~/.test-splitting-orb/test-results
-  - store_artifacts:
-      path: <<parameters.test_results_path>>
-      destination: test-splitting-orb
-  - run: 
       name: Running tests
       command: |
         while ! nc -z localhost 6789; do
@@ -42,3 +36,7 @@ steps:
         echo $TEST_FILES
 
         <<parameters.test_run_command>>
+
+  - store_artifacts:
+      path: <<parameters.test_results_path>>
+      destination: test-splitting-orb
