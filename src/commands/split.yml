@@ -20,7 +20,7 @@ steps:
       command: mkdir -p ~/.test-splitting-orb/test-results
   - store_artifacts:
       path: <<parameters.test_results_path>>
-      destination: ~/.test-splitting-orb/test-results
+      destination: test-splitting-orb
   - run: 
       name: Running tests
       command: |
