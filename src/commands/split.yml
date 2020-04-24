@@ -8,9 +8,6 @@ parameters:
   test_run_command:
     description: The command to run your tests. Use $TEST_FILES in place of your test files
     type: string
-  organization:
-    description: Your CircleCI organization
-    type: string
 steps:
   - run: 
       name: Running tests
