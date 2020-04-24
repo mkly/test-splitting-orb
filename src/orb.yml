@@ -1,0 +1,6 @@
+version: 2.1
+
+description: Test splitting orb. Highly experiental and will not work for you.
+
+display:
+  source_url: https://github.com/mkly/test-splitting-orb

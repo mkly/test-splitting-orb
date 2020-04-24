@@ -1,0 +1,42 @@
+parameters:
+  test_results_path:
+    description: The path of the directory containing the test results
+    type: string
+  test_files_command:
+    description: The command to pass in your test files
+    type: string
+  test_run_command:
+    description: The command to run your tests. Use $TEST_FILES in place of your test files
+    type: string
+  organization:
+    description: Your CircleCI organization
+    type: string
+  project:
+    description: This CircleCI project
+    type: string
+steps:
+  - run: 
+      name: Preparing to store test results data
+      command: mkdir -p ~/.test-splitting-orb/test-results
+  - store_artifacts:
+      path: <<parameters.test_results_path>>
+      destination: ~/.test-splitting-orb/test-results
+  - run: |
+      while ! nc -z localhost 6789; do
+        sleep 0.3
+      done
+
+      ALL_TEST_FILES=$(<<parameters.test_files_command>>)
+      echo $ALL_TEST_FILES
+      TEST_FILES=$(curl -L -G -v "http://localhost:6789" \
+        --data-urlencode "circle-token=${CIRCLE_TOKEN}" \
+        --data-urlencode "organization=<<parameters.organization>>" \
+        --data-urlencode "project=<<parameters.project>>" \
+        --data-urlencode "vcs=gh" \
+        --data-urlencode "test-files=${ALL_TEST_FILES}" \
+        --data-urlencode "node-index=${CIRCLE_NODE_INDEX}" \
+        --data-urlencode "node-total=${CIRCLE_NODE_TOTAL}")
+
+      echo $TEST_FILES
+
+      <<parameters.test_run_command>>
