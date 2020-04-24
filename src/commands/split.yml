@@ -21,22 +21,24 @@ steps:
   - store_artifacts:
       path: <<parameters.test_results_path>>
       destination: ~/.test-splitting-orb/test-results
-  - run: |
-      while ! nc -z localhost 6789; do
-        sleep 0.3
-      done
+  - run: 
+      name: Running tests
+      command: |
+        while ! nc -z localhost 6789; do
+          sleep 0.3
+        done
 
-      ALL_TEST_FILES=$(<<parameters.test_files_command>>)
-      echo $ALL_TEST_FILES
-      TEST_FILES=$(curl -L -G -v "http://localhost:6789" \
-        --data-urlencode "circle-token=${CIRCLE_TOKEN}" \
-        --data-urlencode "organization=<<parameters.organization>>" \
-        --data-urlencode "project=<<parameters.project>>" \
-        --data-urlencode "vcs=gh" \
-        --data-urlencode "test-files=${ALL_TEST_FILES}" \
-        --data-urlencode "node-index=${CIRCLE_NODE_INDEX}" \
-        --data-urlencode "node-total=${CIRCLE_NODE_TOTAL}")
+        ALL_TEST_FILES=$(<<parameters.test_files_command>>)
+        echo $ALL_TEST_FILES
+        TEST_FILES=$(curl -L -G -v "http://localhost:6789" \
+          --data-urlencode "circle-token=${CIRCLE_TOKEN}" \
+          --data-urlencode "organization=<<parameters.organization>>" \
+          --data-urlencode "project=<<parameters.project>>" \
+          --data-urlencode "vcs=gh" \
+          --data-urlencode "test-files=${ALL_TEST_FILES}" \
+          --data-urlencode "node-index=${CIRCLE_NODE_INDEX}" \
+          --data-urlencode "node-total=${CIRCLE_NODE_TOTAL}")
 
-      echo $TEST_FILES
+        echo $TEST_FILES
 
-      <<parameters.test_run_command>>
+        <<parameters.test_run_command>>
